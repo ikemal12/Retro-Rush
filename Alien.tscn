@@ -1,0 +1,106 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Sprites/sprite sheet.png" type="Texture" id=1]
+[ext_resource path="res://Alien.gd" type="Script" id=2]
+[ext_resource path="res://HealthUnit.tscn" type="PackedScene" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 3.62864, 7.93297 )
+
+[sub_resource type="Animation" id=2]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 15 ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "attack"
+length = 0.5
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 30, 31, 32, 33, 34 ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "running"
+length = 0.8
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 15, 16, 17, 18, 20, 21, 22, 23 ]
+}
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 8, 13 )
+
+[node name="Alien" type="KinematicBody2D" groups=["aliens"]]
+script = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="." groups=["aliens"]]
+position = Vector2( 0, 4.54747e-13 )
+rotation = 4.71239
+scale = Vector2( 0.999998, 1.06494 )
+texture = ExtResource( 1 )
+hframes = 5
+vframes = 8
+frame = 15
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -1.43051e-06, 0 )
+scale = Vector2( 4.40937, -2.0169 )
+shape = SubResource( 1 )
+
+[node name="HealthUnit" parent="." instance=ExtResource( 3 )]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 2 )
+anims/attack = SubResource( 4 )
+anims/running = SubResource( 3 )
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 16, -3 )
+shape = SubResource( 5 )
+disabled = true
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+enabled = true
+cast_to = Vector2( 24, 0 )
+
+[node name="Line2D" type="Line2D" parent="."]
+
+[connection signal="died" from="." to="." method="_on_Alien_died"]
+[connection signal="take_damage" from="HealthUnit" to="." method="_on_HealthUnit_take_damage"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_Area2D_body_exited"]

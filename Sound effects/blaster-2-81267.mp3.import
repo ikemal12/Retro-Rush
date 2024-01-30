@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/blaster-2-81267.mp3-13695569492a737dcf57b60230670b76.mp3str"
+
+[deps]
+
+source_file="res://Sound effects/blaster-2-81267.mp3"
+dest_files=[ "res://.import/blaster-2-81267.mp3-13695569492a737dcf57b60230670b76.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0
